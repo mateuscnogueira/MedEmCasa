@@ -1,44 +1,48 @@
-package Control;
+package Control.Usuarios;
 
-import Model.Medico;
+import Model.Registros.PlanoDeSaude;
+import Model.Usuarios.Paciente;
+
 import java.util.Scanner;
 
-public class ListaMedicos implements ColecaoDeUsuarios {
+import Control.Registros.GerenciadorDeRegistros;
 
-    private Medico inicial;
-    private int totalDeMedicos;
+public class ListaPacientes implements ColecaoDeUsuarios {
+
+    private Paciente inicial;
+    private int totalDePacientes;
     private Scanner leitor = new Scanner(System.in);
 
-    public ListaMedicos() {
+    public ListaPacientes() {
         this.inicial = null;
-        this.totalDeMedicos = 0;
+        this.totalDePacientes = 0;
     }
 
-    public Medico getInicial() {
+    public Paciente getInicial() {
         return inicial;
     }
 
-    public int getTotalDeMedicos() {
-        return totalDeMedicos;
+    public int getTotalDePacientes() {
+        return totalDePacientes;
     }
 
-    //add MedTeste para realizar testes na Main
-    public void adicionarMedico(Medico medTeste) {
+    //add PacTeste para realizar testes na Main
+    public void adicionarPaciente(Paciente pacienteTeste) {
         if (inicial == null) {
-            inicial = medTeste;
+            inicial = pacienteTeste;
         } else {
-            Medico atual = inicial;
+            Paciente atual = inicial;
             while (atual.obterProximo() != null) {
                 atual = atual.obterProximo();
             }
-            atual.definirProximo(medTeste);
+            atual.definirProximo(pacienteTeste);
         }
-        totalDeMedicos++;
+        totalDePacientes++;
     }
 
     @Override
     public void cadastrarUsuario() {
-        System.out.println("Cadastrar Médico");
+        System.out.println("Cadastrar Usuário");
         System.out.print("Insira o nome: ");
         String nome = leitor.nextLine();
         System.out.print("Insira o cpf: ");
@@ -51,46 +55,61 @@ public class ListaMedicos implements ColecaoDeUsuarios {
         String email = leitor.nextLine();
         System.out.print("Insira a senha: ");
         String senha = leitor.nextLine();
-        System.out.print("Insira o CRM: ");
-        String crm = leitor.nextLine();
-        System.out.print("Insira a especialidade: ");
-        String especialidade = leitor.nextLine();
+        System.out.print("Insira a Data de Nascimento (DD/MM/AAAA): ");
+        String dataDeNascimento = leitor.nextLine();
 
-        Medico novoMedico = new Medico(nome, cpf, telefone, endereco, email, senha, crm, especialidade);
-        if (inicial == null) {
-            inicial = novoMedico;
-        } else {
-            Medico atual = inicial;
-            while (atual.obterProximo() != null) {
-                atual = atual.obterProximo();
-            }
-            atual.definirProximo(novoMedico);
+        System.out.println("\n\n*** Planos de Saúde ***\n");
+        //Listar planos cadastrados para que o usuário escolha
+        GerenciadorDeRegistros.listaPlanos.listarPlanos();
+        
+        System.out.print("Insira o ID do Plano desejado: ");
+        int planoDesejado = leitor.nextInt();
+        leitor.nextLine(); //limpar buffer
+        
+        // Verificar se o plano desejado existe na lista global de planos
+        PlanoDeSaude planoAtual = GerenciadorDeRegistros.listaPlanos.getInicial();
+        while(planoAtual != null && planoAtual.getIdPlano() != planoDesejado) {
+            planoAtual = planoAtual.obterProximo();
         }
-        totalDeMedicos++;
-        System.out.println("Médico cadastrado com sucesso.");
+        
+        if(planoAtual == null) {
+            System.out.println("Esse plano não existe! Tente novamente.");
+        } else {
+            Paciente novoPaciente = new Paciente(nome, cpf, telefone, endereco, email, senha, dataDeNascimento, planoAtual);
+            if (inicial == null) {
+                inicial = novoPaciente;
+            } else {
+                Paciente atual = inicial;
+                while (atual.obterProximo() != null) {
+                    atual = atual.obterProximo();
+                }
+                atual.definirProximo(novoPaciente);
+            }
+            totalDePacientes++;
+            System.out.println("Paciente cadastrado com sucesso.");
+        }
     }
-
+    
     @Override
     public void editarUsuario() {
-        System.out.println("Editar Médico");
-        System.out.print("Digite o CRM do médico a ser editado: ");
-        String crmBuscado = leitor.nextLine();
-        Medico atual = inicial;
-        while (atual != null && !atual.getCrm().equals(crmBuscado)) {
+        System.out.println("Editar Paciente");
+        System.out.print("Digite o email do paciente a ser editado: ");
+        String emailBuscado = leitor.nextLine();
+        Paciente atual = inicial;
+        while (atual != null && !atual.getEmail().equals(emailBuscado)) {
             atual = atual.obterProximo();
         }
         if (atual != null) {
             String troca = new String();
             int opcao = -1;
 
-            System.out.println("Médico encontrado. O que deseja editar?");
+            System.out.println("Paciente encontrado. O que deseja editar?");
             do {
 
                 System.out.println("1 - Telefone");
                 System.out.println("2 - Endereço");
                 System.out.println("3 - Email");
                 System.out.println("4 - Senha");
-                System.out.println("5 - Especialidade");
                 System.out.println("0 - Sair");
                 opcao = leitor.nextInt();
                 leitor.nextLine(); // Limpar buffer
@@ -123,13 +142,6 @@ public class ListaMedicos implements ColecaoDeUsuarios {
                         System.out.println("\nModificação realizada com êxito!");
                         System.out.println("\nDeseja modificar mais algum campo?\n");
                         break;
-                    case 5:
-                        System.out.print("Nova especialidade: ");
-                        troca = leitor.nextLine();
-                        atual.setEspecialidade(troca);
-                        System.out.println("\nModificação realizada com êxito!");
-                        System.out.println("\nDeseja modificar mais algum campo?\n");
-                        break;
                     case 0:
                         System.out.println("\nDados Salvos!\n\n");
                         break;
@@ -140,22 +152,22 @@ public class ListaMedicos implements ColecaoDeUsuarios {
                 }
             } while (opcao != 0);
         } else {
-            System.out.println("Médico não encontrado.");
+            System.out.println("Paciente não encontrado.");
         }
     }
 
     @Override
     public void excluirUsuario() {
-        System.out.print("Digite o CRM do médico a ser excluído: ");
-        String crmBuscado = leitor.nextLine();
-        Medico atual = inicial;
-        Medico anterior = null;
-        while (atual != null && !atual.getCrm().equals(crmBuscado)) {
+        System.out.print("Digite o email do paciente a ser excluído: ");
+        String emailBuscado = leitor.nextLine();
+        Paciente atual = inicial;
+        Paciente anterior = null;
+        while (atual != null && !atual.getEmail().equals(emailBuscado)) {
             anterior = atual;
             atual = atual.obterProximo();
         }
         if (atual != null) {
-            System.out.print("Tem certeza que deseja excluir o Médico: " + atual.getEmail() + " ? (sim/não): ");
+            System.out.print("Tem certeza que deseja excluir o Paciente: " + atual.getEmail() + " ? (sim/não): ");
             String confirmacao = leitor.nextLine().toLowerCase();  // converte toda a string para minúscula.
 
             if (confirmacao.equals("sim")) {
@@ -164,51 +176,57 @@ public class ListaMedicos implements ColecaoDeUsuarios {
                 } else {
                     anterior.definirProximo(atual.obterProximo());
                 }
-                System.out.println("Médico excluído com sucesso.");
+                System.out.println("Paciente excluído com sucesso.");
             } else {
                 System.out.println("\nOperação cancelada.\n\n");
             }
         } else {
-            System.out.println("Médico não encontrado.");
+            System.out.println("Paciente não encontrado.");
         }
     }
-
+    
     @Override
     public void listarCadastros() {
         if (inicial == null) {
-            System.out.println("Nenhum Médico cadastrado.");
+            System.out.println("Nenhum Paciente cadastrado.");
         } else {
-            Medico atual = inicial;
+            Paciente atual = inicial;
             while (atual != null) {
+                String nomePlano = new String();
+                if(atual.getPlano() == null) {
+                    nomePlano = "";
+                } else {
+                    nomePlano = atual.getPlano().getNomePlano();
+                }
+
                 System.out.println("IdUser: " + atual.getId_user() 
-                + ", IdMed: " + atual.getIdMedico() 
+                + ", IdPaciente: " + atual.getIdPaciente() 
                 + ", Nome: " + atual.getNome() 
                 + ", CPF: " + atual.getCpf() 
                 + ", Telefone: " + atual.getTelefone() 
                 + ", Endereço: " + atual.getEndereco() 
                 + ", Email: " + atual.getEmail() 
                 + ", Senha: " + atual.getSenha()
-                + ", CRM: " + atual.getCrm()
-                + ", Especialidade: " + atual.getCrm() + "\n");
+                + ", Data de Nascimento: " + atual.getDataDeNascimento()
+                + ", Plano: " + nomePlano + "\n");
                 atual = atual.obterProximo();
             }
         }
     }
 
-    @Override
     public void gerenciarUsuario() {
         int opcao;
         do {
-            System.out.println("\n\nGerenciamento de Médicos\n");
+            System.out.println("\nGerenciamento de Pacientes:");
             System.out.println("1 - Cadastrar");
             System.out.println("2 - Editar");
             System.out.println("3 - Excluir");
-            System.out.println("4 - Listar Médicos Cadastrados");
-            System.out.println("0 - Finalizar Gerenciamento");
+            System.out.println("4 - Listar Pacientes Cadastrados");
+            System.out.println("0 - Sair");
 
-            System.out.print("Digite a opção desejada: ");
+            System.out.print("Escolha uma opção: ");
             opcao = leitor.nextInt();
-            leitor.nextLine(); // Limpar o buffer
+            leitor.nextLine();  // Limpar o buffer
 
             switch (opcao) {
                 case 1:
@@ -227,7 +245,7 @@ public class ListaMedicos implements ColecaoDeUsuarios {
                     System.out.println("Gerenciamento Finalizado.");
                     break;
                 default:
-                    System.out.println("Opção Inválida.");
+                    System.out.println("Opção inválida.");
             }
         } while (opcao != 0);
     }

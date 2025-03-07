@@ -1,4 +1,4 @@
-package Model;
+package Model.Registros;
 
 public class PlanoDeSaude {
     private static int contadorIdPlano = 1;

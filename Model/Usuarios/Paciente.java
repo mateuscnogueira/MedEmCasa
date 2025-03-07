@@ -1,7 +1,8 @@
-package Model;
+package Model.Usuarios;
 
 import java.util.Scanner;
-import Control.GerenciadorDeListas;
+import Control.Usuarios.GerenciadorDeListas;
+import Model.Registros.PlanoDeSaude;
 
 public class Paciente extends Usuario {
     private static int contadorIdPaciente = 1;

@@ -1,8 +1,11 @@
-package Control;
+package Control.Registros;
 
-import Model.Paciente;
-import Model.Pagamento;
+import Model.Registros.Pagamento;
+import Model.Usuarios.Paciente;
+import Control.Usuarios.GerenciadorDeListas;
+
 import java.util.Scanner;
+
 
 public class ListaPagamentos {
     private Pagamento inicial;
@@ -78,7 +81,7 @@ public class ListaPagamentos {
         leitor.nextLine(); // limpar buffer
 
         // Verificar se o paciente e o id existem e estão na mesma posição na lista global de Pagamentos
-        Pagamento pagamentoAtual = GerenciadorDeListas.listaPagamentos.getInicial();
+        Pagamento pagamentoAtual = GerenciadorDeRegistros.listaPagamentos.getInicial();
 
         while(pagamentoAtual != null && (!pagamentoAtual.getPaciente().getNome().equals(nomeBuscado) || pagamentoAtual.getIdPagamento() != idBuscado)) {
             pagamentoAtual = pagamentoAtual.obterProximo();

@@ -1,4 +1,6 @@
-package Model;
+package Model.Registros;
+
+import Model.Usuarios.Paciente;
 
 public class Pagamento {
     private static int contadorIdPagamento = 1;

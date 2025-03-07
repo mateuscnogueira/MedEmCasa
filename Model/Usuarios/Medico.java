@@ -1,7 +1,7 @@
-package Model;
+package Model.Usuarios;
 
 import java.util.Scanner;
-import Control.GerenciadorDeListas;
+import Control.Usuarios.GerenciadorDeListas;
 
 public class Medico extends Usuario {
     private static int contadorIdMedico = 1;
@@ -86,7 +86,7 @@ public class Medico extends Usuario {
             System.out.println("0 - Sair");
             
             /*
-            Médico visualiza consultas disponíveis > seleciona alguma consulta
+            Médico visualiza consultas disponíveis > seleciona alguma consulta.
             gerenciarConsultas() :
                 1 - Realizar Consulta
                 2 - Consultar Histórico Médico > retorna o prontuário do paciente
@@ -101,7 +101,6 @@ public class Medico extends Usuario {
                         3.22 - Preescrever Receitas
                         3.23 - Solicitar Exames
                         3.24 - Registrar Resultado
-                    3.5 -
             */
 
             System.out.print("Digite a opção desejada: ");

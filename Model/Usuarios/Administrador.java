@@ -1,7 +1,9 @@
-package Model;
+package Model.Usuarios;
 
 import java.util.Scanner;
-import Control.GerenciadorDeListas;
+
+import Control.Registros.GerenciadorDeRegistros;
+import Control.Usuarios.GerenciadorDeListas;
 
 public class Administrador extends Usuario {
     private static int contadorIdAdministrador = 1;
@@ -92,10 +94,10 @@ public class Administrador extends Usuario {
                     GerenciadorDeListas.listaPacientes.gerenciarUsuario();
                     break;
                 case 4:
-                    GerenciadorDeListas.listaPlanos.gerenciarPlano();
+                    GerenciadorDeRegistros.listaPlanos.gerenciarPlano();
                     break;
                 case 5:
-                    GerenciadorDeListas.listaPagamentos.gerenciarPagamento();
+                    GerenciadorDeRegistros.listaPagamentos.gerenciarPagamento();
                     break;
                 case 0:
                     System.out.println("Saindo do sistema...");

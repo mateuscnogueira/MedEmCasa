@@ -1,4 +1,4 @@
-package Control;
+package Control.Usuarios;
 
 public interface ColecaoDeUsuarios {
     

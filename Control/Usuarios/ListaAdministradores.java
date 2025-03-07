@@ -1,46 +1,44 @@
-package Control;
+package Control.Usuarios;
 
-import Model.Paciente;
-import Model.PlanoDeSaude;
-
+import Model.Usuarios.Administrador;
 import java.util.Scanner;
 
-public class ListaPacientes implements ColecaoDeUsuarios {
-
-    private Paciente inicial;
-    private int totalDePacientes;
+public class ListaAdministradores implements ColecaoDeUsuarios {
+    private Administrador inicial;
+    private int totalDeAdministradores;
     private Scanner leitor = new Scanner(System.in);
 
-    public ListaPacientes() {
+    public ListaAdministradores() {
         this.inicial = null;
-        this.totalDePacientes = 0;
+        this.totalDeAdministradores = 0;
     }
 
-    public Paciente getInicial() {
+    public Administrador getInicial() {
         return inicial;
     }
 
-    public int getTotalDePacientes() {
-        return totalDePacientes;
+    public int getTotalDeAdministradores() {
+        return totalDeAdministradores;
     }
 
-    //add PacTeste para realizar testes na Main
-    public void adicionarPaciente(Paciente pacienteTeste) {
+    //add AdmMestre para realizar testes na Main
+    public void adicionarAdministrador(Administrador admMestre) {
         if (inicial == null) {
-            inicial = pacienteTeste;
+            inicial = admMestre;
         } else {
-            Paciente atual = inicial;
+            Administrador atual = inicial;
             while (atual.obterProximo() != null) {
                 atual = atual.obterProximo();
             }
-            atual.definirProximo(pacienteTeste);
+            atual.definirProximo(admMestre);
         }
-        totalDePacientes++;
+        totalDeAdministradores++;
     }
 
     @Override
     public void cadastrarUsuario() {
-        System.out.println("Cadastrar Usuário");
+        System.out.println("\nCadastrar Administrador\n");
+
         System.out.print("Insira o nome: ");
         String nome = leitor.nextLine();
         System.out.print("Insira o cpf: ");
@@ -53,47 +51,29 @@ public class ListaPacientes implements ColecaoDeUsuarios {
         String email = leitor.nextLine();
         System.out.print("Insira a senha: ");
         String senha = leitor.nextLine();
-        System.out.print("Insira a Data de Nascimento (DD/MM/AAAA): ");
-        String dataDeNascimento = leitor.nextLine();
+        System.out.print("Insira a função: ");
+        String funcao = leitor.nextLine();
+        
+        Administrador novoAdministrador = new Administrador(nome, cpf, telefone, endereco, email, senha, funcao);
 
-        System.out.println("\n\n*** Planos de Saúde ***\n");
-        //Listar planos cadastrados para que o usuário escolha
-        GerenciadorDeListas.listaPlanos.listarPlanos();
-        
-        System.out.print("Insira o ID do Plano desejado: ");
-        int planoDesejado = leitor.nextInt();
-        leitor.nextLine(); //limpar buffer
-        
-        // Verificar se o plano desejado existe na lista global de planos
-        PlanoDeSaude planoAtual = GerenciadorDeListas.listaPlanos.getInicial();
-        while(planoAtual != null && planoAtual.getIdPlano() != planoDesejado) {
-            planoAtual = planoAtual.obterProximo();
-        }
-        
-        if(planoAtual == null) {
-            System.out.println("Esse plano não existe! Tente novamente.");
+        if (inicial == null) {
+            inicial = novoAdministrador;
         } else {
-            Paciente novoPaciente = new Paciente(nome, cpf, telefone, endereco, email, senha, dataDeNascimento, planoAtual);
-            if (inicial == null) {
-                inicial = novoPaciente;
-            } else {
-                Paciente atual = inicial;
-                while (atual.obterProximo() != null) {
-                    atual = atual.obterProximo();
-                }
-                atual.definirProximo(novoPaciente);
+            Administrador atual = inicial;
+            while (atual.obterProximo() != null) {
+                atual = atual.obterProximo();
             }
-            totalDePacientes++;
-            System.out.println("Paciente cadastrado com sucesso.");
+            atual.definirProximo(novoAdministrador);
         }
+        System.out.println("\nAdministrador cadastrado com sucesso.\n\n");
     }
-    
+
     @Override
     public void editarUsuario() {
-        System.out.println("Editar Paciente");
-        System.out.print("Digite o email do paciente a ser editado: ");
+        System.out.println("\nEditar Administrador\n");
+        System.out.print("Digite o email do Administrador para editar: ");
         String emailBuscado = leitor.nextLine();
-        Paciente atual = inicial;
+        Administrador atual = inicial;
         while (atual != null && !atual.getEmail().equals(emailBuscado)) {
             atual = atual.obterProximo();
         }
@@ -101,14 +81,16 @@ public class ListaPacientes implements ColecaoDeUsuarios {
             String troca = new String();
             int opcao = -1;
 
-            System.out.println("Paciente encontrado. O que deseja editar?");
+            System.out.println("\nAdministrador encontrado. O que deseja editar?\n");
             do {
 
                 System.out.println("1 - Telefone");
                 System.out.println("2 - Endereço");
                 System.out.println("3 - Email");
                 System.out.println("4 - Senha");
+                System.out.println("5 - Função");
                 System.out.println("0 - Sair");
+                System.out.print("\nDigite a opção desejada: ");
                 opcao = leitor.nextInt();
                 leitor.nextLine(); // Limpar buffer
                 switch (opcao) {
@@ -140,6 +122,13 @@ public class ListaPacientes implements ColecaoDeUsuarios {
                         System.out.println("\nModificação realizada com êxito!");
                         System.out.println("\nDeseja modificar mais algum campo?\n");
                         break;
+                    case 5:
+                        System.out.print("Nova especialidade: ");
+                        troca = leitor.nextLine();
+                        atual.setFuncao(troca);
+                        System.out.println("\nModificação realizada com êxito!");
+                        System.out.println("\nDeseja modificar mais algum campo?\n");
+                        break;
                     case 0:
                         System.out.println("\nDados Salvos!\n\n");
                         break;
@@ -150,74 +139,74 @@ public class ListaPacientes implements ColecaoDeUsuarios {
                 }
             } while (opcao != 0);
         } else {
-            System.out.println("Paciente não encontrado.");
+            System.out.println("Administrador não encontrado.");
         }
     }
 
     @Override
     public void excluirUsuario() {
-        System.out.print("Digite o email do paciente a ser excluído: ");
+        System.out.print("Digite o email do Administrador a ser excluído: ");
         String emailBuscado = leitor.nextLine();
-        Paciente atual = inicial;
-        Paciente anterior = null;
+        Administrador atual = this.inicial;
+        Administrador anterior = null;
         while (atual != null && !atual.getEmail().equals(emailBuscado)) {
             anterior = atual;
             atual = atual.obterProximo();
         }
         if (atual != null) {
-            System.out.print("Tem certeza que deseja excluir o Paciente: " + atual.getEmail() + " ? (sim/não): ");
+            System.out.print("Tem certeza que deseja excluir o Administrador: " + atual.getEmail() + " ? (sim/não): ");
             String confirmacao = leitor.nextLine().toLowerCase();  // converte toda a string para minúscula.
 
-            if (confirmacao.equals("sim")) {
+            if(confirmacao.equals("sim")) {
                 if (anterior == null) {
                     inicial = atual.obterProximo();
                 } else {
                     anterior.definirProximo(atual.obterProximo());
                 }
-                System.out.println("Paciente excluído com sucesso.");
+                System.out.println("Administrador excluído com sucesso.");
             } else {
                 System.out.println("\nOperação cancelada.\n\n");
             }
         } else {
-            System.out.println("Paciente não encontrado.");
+            System.out.println("Administrador não encontrado.");
         }
     }
-    
+
     @Override
     public void listarCadastros() {
         if (inicial == null) {
-            System.out.println("Nenhum Paciente cadastrado.");
+            System.out.println("Nenhum Administrador cadastrado.");
         } else {
-            Paciente atual = inicial;
+            Administrador atual = inicial;
             while (atual != null) {
                 System.out.println("IdUser: " + atual.getId_user() 
-                + ", IdPaciente: " + atual.getIdPaciente() 
+                + ", IdAdm: " + atual.getIdAdministrador() 
                 + ", Nome: " + atual.getNome() 
                 + ", CPF: " + atual.getCpf() 
                 + ", Telefone: " + atual.getTelefone() 
                 + ", Endereço: " + atual.getEndereco() 
                 + ", Email: " + atual.getEmail() 
                 + ", Senha: " + atual.getSenha()
-                + ", Data de Nascimento: " + atual.getDataDeNascimento()
-                + ", Plano: " + atual.getPlano().getNomePlano() + "\n");
+                + ", Função: " + atual.getFuncao() + "\n");
                 atual = atual.obterProximo();
             }
         }
     }
 
+    @Override
     public void gerenciarUsuario() {
         int opcao;
         do {
-            System.out.println("\nGerenciamento de Pacientes:");
+            System.out.println("\nGerenciamento de Administradores:");
             System.out.println("1 - Cadastrar");
             System.out.println("2 - Editar");
             System.out.println("3 - Excluir");
-            System.out.println("4 - Listar Pacientes Cadastrados");
+            System.out.println("4 - Listar Administradores Cadastrados");
             System.out.println("0 - Sair");
 
             System.out.print("Escolha uma opção: ");
             opcao = leitor.nextInt();
-            leitor.nextLine();  // Limpar o buffer
+            leitor.nextLine(); // Limpar buffer
 
             switch (opcao) {
                 case 1:
@@ -229,7 +218,7 @@ public class ListaPacientes implements ColecaoDeUsuarios {
                 case 3:
                     excluirUsuario();
                     break;
-                case 4:
+                    case 4:
                     listarCadastros();
                     break;
                 case 0:
@@ -241,3 +230,4 @@ public class ListaPacientes implements ColecaoDeUsuarios {
         } while (opcao != 0);
     }
 }
+

@@ -1,7 +1,9 @@
-package Control;
+package Control.Registros;
 
 import java.util.Scanner;
-import Model.PlanoDeSaude;
+
+import Model.Registros.PlanoDeSaude;
+import Model.Usuarios.Paciente;
 
 public class ListaPlanos {
     private PlanoDeSaude inicial;
